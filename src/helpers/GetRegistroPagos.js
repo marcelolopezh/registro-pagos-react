@@ -16,9 +16,9 @@ export const getRegistroPagos = async (option) => {
     const data = await response.json();
 
     let array = [];
-    let fondo = 1125000;
-    array[0] = fondo;
-
+    let fondo = parseInt(localStorage.getItem("montoBase"), 10);
+    let fechaFondo = localStorage.getItem("fechaIngresoMontoBase");
+    array[fechaFondo.split("/")[0] - 1] = fondo;
     /* Transformar Datos a Array Diario */
     data.registroPagos.forEach((element) => {
       let date = moment(element.fechaDate).format("D");
@@ -35,11 +35,6 @@ export const getRegistroPagos = async (option) => {
         array[date - 1] = fondo;
       }
     });
-
-    for (let i = 0; i < array.length; i++) {
-      if (array[i] == null) array[i] = array[i - 1];
-    }
-
     return array;
   } catch (error) {
     console.log(error);
